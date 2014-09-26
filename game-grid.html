@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="css/default.css" type="text/css" rel="stylesheet" />
+        <!--<script src="js/game-grid.js" type="text/javascript"></script> -->
+
+
+        <script src="http://10.192.61.162:8083/socket.io/socket.io.js"></script>
+        <script src="js/jquery-2.1.1.min.js"></script>
+
+        <script type="text/javascript">
+            var socket = io.connect("10.192.61.162:8083");
+        
+
+            socket.on('turnGrid', function(val) {
+                console.log('turn to ' + val);
+
+
+                var angle = val;
+
+                $('.wheel').css({
+                    'transform': 'rotate(' + angle + 'deg)',
+                    '-webkit-tranform': 'rotate(' + angle + 'deg)'
+                });
+                
+            });
+
+            console.log(socket);
+        </script>
+    </head>
+
+    <body>
+        <h1>Car control</h1>
+
+        <div class="car">
+            <div class="wheel left"></div>
+            <div class="wheel right"></div>
+        </div>
+
+    </body>
+
+</html>

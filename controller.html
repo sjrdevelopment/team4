@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="css/default.css" type="text/css" rel="stylesheet" />
+ <!--         <script src="js/controller.js" type="text/js"></script> -->
+
+
+        <script src="http://10.192.61.162:8083/socket.io/socket.io.js"></script>
+        <script src="js/jquery-2.1.1.min.js"></script>
+        <script src="js/lodash.min.js"></script>
+
+        
+    </head>
+
+    <body>
+        <h1>Controller</h1>
+        <p>abs: <span id="a"></span></p>
+        <p>x: <span id="x"></span></p>
+        <p>y: <span id="y"></span></p>
+        <p>z: <span id="z"></span></p>
+
+        <script type="text/javascript">
+            var socket = io.connect("http://10.192.61.162:8083");
+
+     
+            var oldPos = 0;
+
+            function handleOrientation(event) {
+
+ 
+                var absolute = event.absolute;
+                var alpha    = event.alpha;
+                var beta     = event.beta;
+                var gamma    = event.gamma;
+
+                document.getElementById("a").innerHTML = absolute;
+                document.getElementById("x").innerHTML = alpha;
+                document.getElementById("y").innerHTML = beta;
+                document.getElementById("z").innerHTML = gamma;
+
+                var newPos = Math.floor(beta);
+
+                /*
+                if(newPos < 0) {
+                    newPos = Math.abs(newPos);
+                } else {
+                    newPos = 0 - newPos;
+                }
+    */
+
+                if (oldPos != newPos) {
+                    socket.emit('turnWheel', newPos);
+                    oldPos = newPos;
+                }
+            }
+            
+           // var throttled = _.throttle(handleOrientation, 10);
+
+            window.addEventListener("deviceorientation", handleOrientation, true);
+
+                        
+
+        </script>
+    </body>
+
+</html>
