@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="css/default.css" type="text/css" rel="stylesheet" />
+ <!--         <script src="js/controller.js" type="text/js"></script> -->
+
+
+        <script src="http://10.192.61.193:8083/socket.io/socket.io.js"></script>
+        <script src="js/jquery-2.1.1.min.js"></script>
+        <script src="js/lodash.min.js"></script>
+        
+        <link href='http://fonts.googleapis.com/css?family=Orbitron:400,700' rel='stylesheet' type='text/css'>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Team 4 Micro Machines</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+        
+    </head>
+
+    <body>
+        <div class="welcome-header">
+            <img src="img/team4.png" alt="A Team4 Production" />
+            <h1>Micro Machines</h1>
+            <p>A Team4 Production</p>
+        </div>
+        
+        <div class="landing-page">    
+            <a href="#" class="join-game button">Join</a>
+        </div>
+
+        <div class="enter-details">
+            <p class="error-message">You need to enter a name and choose a color</p>
+            <input type="text" name="player-name" id="player-name" placeholder="Enter your name" />
+            <label class="choose-color" for="player-color">Choose color: </label>
+            
+            <div class="row">
+                <span class="color-wrapper">
+                    <input type="radio" name="player-color" id="player-color-black" value="000000" />
+                    <span class="color-square black"> </span>
+                </span>
+
+                <span class="color-wrapper">
+                    <input type="radio" name="player-color" id="player-color-white" value="ffffff" />
+                    <span class="color-square white"> </span>
+                </span>
+
+                <span class="color-wrapper">
+                    <input type="radio" name="player-color" id="player-color-blue" value="10B4CC" />
+                    <span class="color-square blue"> </span>
+                </span>
+            </div>
+
+            <div class="row">
+                <span class="color-wrapper">
+                    <input type="radio" name="player-color" id="player-color-green" value="2FCC18" />
+                    <span class="color-square green"> </span>
+                </span>
+
+                <span class="color-wrapper">
+                    <input type="radio" name="player-color" id="player-color-red" value="E8090A" />
+                    <span class="color-square red"> </span>
+                </span>
+
+                <span class="color-wrapper">
+                    <input type="radio" name="player-color" id="player-color-yellow" value="FCFF00" />
+                    <span class="color-square yellow"> </span>
+                </span>
+            </div>
+
+            <div class="row clearfix">
+                <span class="color-wrapper">
+                    <input type="radio" name="player-color" id="player-color-grey" value="666666" />
+                    <span class="color-square grey"> </span>
+                </span>
+
+                <span class="color-wrapper">
+                    <input type="radio" name="player-color" id="player-color-brown" value="8F6822" />
+                    <span class="color-square brown"> </span>
+                </span>
+
+                <span class="color-wrapper">
+                    <input type="radio" name="player-color" id="player-color-amber" value="EC9516" />
+                    <span class="color-square amber"> </span>
+                </span>
+            </div>
+
+            <a href="#" class="submit-details button">Let's Race!</a>
+        </div>
+
+        <div class="loading-screen">
+            <p>Loading...</p>
+               
+        </div>
+
+        <div class="ready-screen">
+            <p>Welcome, <span class="player-name">Player</span></p>
+            <p>Players in this round: </p>
+
+            <ul class="clearfix other-players">
+
+            </ul>
+
+            <p>The game will begin shortly</p>
+        </div>
+        
+
+        <script type="text/javascript">
+
+            var socket,
+                playerConfig = {},
+                selectedColor = '';
+
+
+            var showLoadingScreen = function () {
+                //show loading screen until event fired from server to say user ready
+                $('.enter-details').hide();
+                $('.loading-screen').show();
+            };
+
+
+            var showReadyScreen = function (joinedPlayers) {
+                // call this when server event fired to say user is setup.
+                $('.loading-screen').hide();
+                $('.ready-screen').show();
+
+                $('.player-name').html(playerConfig.playerName);
+
+                // show who has joined so far
+                updateJoinedPlayers(joinedPlayers);
+            };
+
+
+            var updateJoinedPlayers = function (joinedPlayers) {
+                console.log('players have changed');
+
+                var $playersList = $('.other-players');
+                $playersList.html('');
+
+                for (var i=0; i < joinedPlayers.length; i++) {
+                    $playersList.append(
+                        '<li class="' + joinedPlayers[i].playerColor
+                            + '" style="background-color: #'
+                            + joinedPlayers[i].playerColor + '"><span class="name">'
+                            + joinedPlayers[i].playerName
+                            + '</span><span class="color" data-hex="'
+                            + joinedPlayers[i].playerColor + '</span></li>'
+                    );
+                }
+            };
+
+
+            var sendUserConfig = function (event) {
+                event.preventDefault();
+                
+                playerConfig = {
+                    playerName: $('#player-name').val(),
+                    playerColor: selectedColor
+                };
+
+                socket.emit('initialisePlayer', playerConfig);
+
+                showLoadingScreen();
+            };
+
+
+            var showJoiningScreen = function () {
+                $('.landing-page').hide();
+                $('.loading-screen').hide();
+                $('.enter-details').show();
+            };
+
+
+            var showBouncerPage = function () {
+                window.location = 'bouncer.html';
+            };
+
+
+            var beginGame = function () {
+                window.location = 'controller.html';
+            };
+
+
+            var showConfigError = function () {
+                showJoiningScreen();
+                $('.error-message').show();
+            };
+
+
+            var addUserToGame = function () {
+                socket = io.connect('http://10.192.61.193:8083');
+
+                if (socket) {
+                    console.log('user added to game with socket: ' + socket);
+
+                     // when server fires ready event after user config loaded
+                    socket.on('userReady', showReadyScreen);
+
+                    // when any new player joins, update the list
+                    socket.on('sendUpdatedPlayers', updateJoinedPlayers);
+
+                    // if there are already too many players 
+                    socket.on('serveBouncerPage', showBouncerPage);
+
+                    //begin game
+                    socket.on('beginGame', beginGame);
+
+                    socket.on('configError', showConfigError);
+                }
+
+                showJoiningScreen();
+            };
+
+
+            var bindEvents = function () {
+                $('.join-game').on('click', addUserToGame);
+                $('.submit-details').on('click', sendUserConfig);
+
+                $('.row').find('input[type=radio]').on('change', function() {
+                    selectedColor = $(this).val();
+                });
+            };
+
+
+            bindEvents();
+
+        </script>
+    </body>
+
+</html>
