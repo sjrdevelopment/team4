@@ -5,7 +5,7 @@
  <!--         <script src="js/controller.js" type="text/js"></script> -->
 
 
-        <script src="http://10.192.61.193:8083/socket.io/socket.io.js"></script>
+        <script src="http://10.192.61.81:8083/socket.io/socket.io.js"></script>
         <script src="js/jquery-2.1.1.min.js"></script>
         <script src="js/lodash.min.js"></script>
         
@@ -188,7 +188,7 @@
 
 
             var addUserToGame = function () {
-                socket = io.connect('http://10.192.61.193:8083');
+                socket = io.connect('http://10.192.61.81:8083');
 
                 if (socket) {
                     console.log('user added to game with socket: ' + socket);
