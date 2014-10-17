@@ -176,8 +176,21 @@ Requires jQuery
 
 */
 
+var sendPositionsToSocket = sendPositions || function() {};
 
-var printText = function(text){
+var printText = function (text) {
+	
+	// split by ' '
+	var parts = text.split(' ');
+
+	var coordinates = {
+		direction: parts[0],
+		acceleration: parts[1]
+	}
+
+	sendPositionsToSocket(coordinates);
+
+	console.log(coordinates);
 
 	var t = text || '';
 	$('.output').text(t);

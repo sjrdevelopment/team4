@@ -1,0 +1,112 @@
+body.has-controller {
+    font-family: Helvetica, Arial, san-serif;
+    font-size: 100%;
+    margin: 0; padding: 0;
+    color: #fff;
+    background: none;
+    background-color: #000;
+}
+
+#container {
+    
+}
+
+.controller {
+    display:none;
+}
+.controller.active {
+    display: block;
+}
+
+.box {
+    float: left;
+    width: 33%;
+    height: 1em;
+    line-height: 1em;
+    padding: 0.9em 0;
+    background-color: #ff0;
+    color: #000;
+    text-align: center;
+    opacity: 0.5;
+    font-size: 1.8em;
+
+}
+.box.active {
+    opacity: 1;
+}
+
+#controllerP .output {
+    background-color: #000;
+    color: #fff;
+    min-height: 1em;
+    line-height: 1em;
+    padding: 0.9em 0;
+    font-size: 1.8em;
+    text-align: center;
+}
+
+
+
+
+
+
+.controlBox {
+    position: relative;
+    float: left;
+    width: 50%;
+    height: 300px;
+    line-height: 1em;
+    padding: 0;
+}
+#speed {
+    margin-right: -4px;
+    border-right: 4px solid #0cf;
+}
+.middleMarker,
+#speed .touchMarker {
+    display: block;
+    position: absolute;
+    top: 49%;
+    left: 0;
+    width: 100%;
+    height: 0;
+    border-top: 1px solid #0cf;
+}
+#speed .touchMarker {
+    top: 25px;
+    border-top: 3px solid #fff;
+
+}
+.centerMarker,
+#direction .touchMarker {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 0;
+    height: 100%;
+    border-left: 1px solid #0cf;
+}
+#direction .touchMarker {
+    left: 25px;
+    border-left: 3px solid #fff;
+}
+
+#controllerL .output {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 4em;
+    margin-left: -2em;
+    background-color: #000;
+    color: #fff;
+    min-height: 1em;
+    line-height: 1em;
+    padding: 0.9em 0;
+    font-size: 1.8em;
+    text-align: center;
+
+    border-right: 1px solid #0cf;
+    border-bottom: 1px solid #0cf;
+    border-left: 1px solid #0cf;
+}

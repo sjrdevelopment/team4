@@ -2,12 +2,14 @@
 <html>
     <head>
         <link href="css/default.css" type="text/css" rel="stylesheet" />
+        <link href="css/controller.css" type="text/css" rel="stylesheet" />
  <!--         <script src="js/controller.js" type="text/js"></script> -->
 
 
-        <script src="http://10.192.61.81:8083/socket.io/socket.io.js"></script>
+        <script src="http://d405734.ngrok.com/socket.io/socket.io.js"></script>
         <script src="js/jquery-2.1.1.min.js"></script>
         <script src="js/lodash.min.js"></script>
+        <!-- <script src="js/controller-functions.js" type="text/javascript"></script> -->
         
         <link href='http://fonts.googleapis.com/css?family=Orbitron:400,700' rel='stylesheet' type='text/css'>
 
@@ -26,7 +28,7 @@
         </div>
         
         <div class="landing-page">    
-            <a href="#" class="join-game button">Join</a>
+            <a href="#" style="cursor: pointer" class="join-game button">Join</a>
         </div>
 
         <div class="enter-details">
@@ -100,8 +102,60 @@
             <ul class="clearfix other-players">
 
             </ul>
-
+            <h2>Rotate your phone to landscape now</h2>
             <p>The game will begin shortly</p>
+        </div>
+
+
+
+
+
+        <div class="controller-screen">
+
+
+
+            <div id="container" class="container">
+
+                <div id="controllerP" class="controller">
+
+                    <div class="output"></div>
+
+                    <div class="box" data-text="<++"><++</div>
+                    <div class="box" data-text="++">++</div>
+                    <div class="box" data-text="++>">++></div>
+
+                    <div class="box" data-text="<+"><+</div>
+                    <div class="box" data-text="+">+</div>
+                    <div class="box" data-text="+>">+></div>
+
+                    <div class="box" data-text="<-"><-</div>
+                    <div class="box" data-text="-">-</div>
+                    <div class="box" data-text="->">-></div>
+
+                    <div class="box" data-text="<&plusmn;"><&plusmn;</div>
+                    <div class="box" data-text="&plusmn;">&plusmn;</div>
+                    <div class="box" data-text="&plusmn;>">&plusmn;></div>
+
+                </div>
+
+                <div id="controllerL" class="controller">
+
+                    <div id="speed" class="controlBox">
+                        <span class="middleMarker"></span>
+                    </div>
+                    <div id="direction" class="controlBox">
+                        <span class="centerMarker"></span>
+                    </div>
+
+                    <div class="output"></div>
+
+                </div>
+
+            </div>
+
+
+
+
         </div>
         
 
@@ -111,6 +165,20 @@
                 playerConfig = {},
                 selectedColor = '';
 
+            var sendPositions = function (coordinates) {
+                // check coordinates
+                if (coordinates.direction != 0) {
+                  
+                    // emit direction socket event
+                    socket.emit('turning', coordinates.direction);
+                
+                } if (coordinates.acceleration != 0) {
+                 
+                    // emit acceleration socket event
+                    socket.emit('acceleration', coordinates.acceleration);
+                
+                }
+            }
 
             var showLoadingScreen = function () {
                 //show loading screen until event fired from server to say user ready
@@ -177,7 +245,20 @@
 
 
             var beginGame = function () {
-                window.location = 'controller.html';
+                $('.ready-screen').hide();
+                $('.welcome-header').hide();
+                $('.controller-screen').show();
+                $('body').addClass('has-controller');
+
+                jQuery.getScript('js/controller-functions.js',
+                    function(data, status, jqxhr) {
+
+                    console.log('script has loaded');
+                    controllerInit();
+
+                });
+                            
+
             };
 
 
@@ -188,7 +269,8 @@
 
 
             var addUserToGame = function () {
-                socket = io.connect('http://10.192.61.81:8083');
+    
+                socket = io.connect('http://d405734.ngrok.com');
 
                 if (socket) {
                     console.log('user added to game with socket: ' + socket);
@@ -209,6 +291,7 @@
                 }
 
                 showJoiningScreen();
+                
             };
 
 

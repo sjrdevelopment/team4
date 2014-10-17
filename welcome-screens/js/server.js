@@ -51,4 +51,14 @@ io.sockets.on('connection', function (socket) {
         //io.sockets.socket(socketArray[0]).emit('turnGrid', val);
     });
 
+    socket.on('turning', function (turningValue) {
+        // do something with the turned value (-1 to 1)
+        console.log(socket.id + ' is turning by ' + turningValue);
+    });
+
+    socket.on('acceleration', function (accelerationValue) {
+        // do something with the acceleration value (-1 to 0 for braking/reverse, 0-1 for forward acceleration)
+        console.log(socket.id + ' is accerating by ' + accelerationValue);
+    });
+
 });
