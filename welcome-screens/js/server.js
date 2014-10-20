@@ -1,6 +1,7 @@
 var io = require('socket.io').listen(8083);
 var socketArray = [];
 var players = [];
+var carColors = ['blue', 'green', 'grey', 'olive', 'orange', 'purple', 'red', 'white', 'yellow'];
 
 var serveBouncerPage = function (socket) {
     socket.emit('serveBouncerPage');
@@ -21,20 +22,21 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('initialisePlayer', function (playerConfig) {
 
-        if (!playerConfig.playerName || !playerConfig.playerColor) {
+        if (!playerConfig.playerName) {
             console.log('Error found in config settings');
             socket.emit('configError');
             return false;
         }
 
         if (players.length < 5) {
+            playerConfig.playerColor = carColors.pop();
             console.log('setting up user...');
             players.push(playerConfig);
             socket.emit('userReady', players);
             socket.broadcast.emit('sendUpdatedPlayers', players);
 
         } else if (players.length === 5) {
-            
+            playerConfig.playerColor = carColors.pop();
             players.push(playerConfig);
             socket.emit('userReady', players);
             socket.broadcast.emit('sendUpdatedPlayers', players);

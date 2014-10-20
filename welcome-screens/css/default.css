@@ -229,11 +229,16 @@ body {
 .ready-screen li {
     float: left;
     margin: 1%;
-    border: 1px solid #FFF;
     padding: 14px;
     border-radius: 4px;
     width: 31%;
     text-align: center;
+}
+
+
+li .name {
+    padding-top: 22px;
+    float: right
 }
 
 .ffffff {
@@ -242,4 +247,56 @@ body {
 
 .000000 {
     color: #fff;
+}
+
+.car-identifier {
+    padding-top: 22px;
+    margin-bottom:8px;
+}
+
+.car-identifier img {
+    float: left;
+    margin-top: -24px;
+    margin-right: 10px;
+}
+
+.car-identifier .car-color {
+    font-weight:600;
+
+}
+
+.car-color.orange {
+    color:#E77D20;
+}
+
+.car-color.red {
+    color:#E84A3A;
+}
+
+.car-color.yellow {
+    color:#F3C60C;
+}
+
+.car-color.blue {
+    color:#3297DA;
+}
+
+.car-color.green {
+    color:#2BCD70;
+}
+
+.car-color.olive {
+    color:#119077;
+}
+
+.car-color.white {
+    color:#BDC2C7;
+}
+
+.car-color.grey {
+    color:#7C8A8E;
+}
+
+.car-color.purple {
+    color:#9956B4
 }

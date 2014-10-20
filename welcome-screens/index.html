@@ -5,8 +5,7 @@
         <link href="css/controller.css" type="text/css" rel="stylesheet" />
  <!--         <script src="js/controller.js" type="text/js"></script> -->
 
-
-        <script src="http://d405734.ngrok.com/socket.io/socket.io.js"></script>
+        <script src="http://45b0e8f6.ngrok.com/socket.io/socket.io.js"></script>
         <script src="js/jquery-2.1.1.min.js"></script>
         <script src="js/lodash.min.js"></script>
         <!-- <script src="js/controller-functions.js" type="text/javascript"></script> -->
@@ -32,60 +31,9 @@
         </div>
 
         <div class="enter-details">
-            <p class="error-message">You need to enter a name and choose a color</p>
+            <p class="error-message">You need to enter a player name</p>
             <input type="text" name="player-name" id="player-name" placeholder="Enter your name" />
-            <label class="choose-color" for="player-color">Choose color: </label>
-            
-            <div class="row">
-                <span class="color-wrapper">
-                    <input type="radio" name="player-color" id="player-color-black" value="000000" />
-                    <span class="color-square black"> </span>
-                </span>
-
-                <span class="color-wrapper">
-                    <input type="radio" name="player-color" id="player-color-white" value="ffffff" />
-                    <span class="color-square white"> </span>
-                </span>
-
-                <span class="color-wrapper">
-                    <input type="radio" name="player-color" id="player-color-blue" value="10B4CC" />
-                    <span class="color-square blue"> </span>
-                </span>
-            </div>
-
-            <div class="row">
-                <span class="color-wrapper">
-                    <input type="radio" name="player-color" id="player-color-green" value="2FCC18" />
-                    <span class="color-square green"> </span>
-                </span>
-
-                <span class="color-wrapper">
-                    <input type="radio" name="player-color" id="player-color-red" value="E8090A" />
-                    <span class="color-square red"> </span>
-                </span>
-
-                <span class="color-wrapper">
-                    <input type="radio" name="player-color" id="player-color-yellow" value="FCFF00" />
-                    <span class="color-square yellow"> </span>
-                </span>
-            </div>
-
-            <div class="row clearfix">
-                <span class="color-wrapper">
-                    <input type="radio" name="player-color" id="player-color-grey" value="666666" />
-                    <span class="color-square grey"> </span>
-                </span>
-
-                <span class="color-wrapper">
-                    <input type="radio" name="player-color" id="player-color-brown" value="8F6822" />
-                    <span class="color-square brown"> </span>
-                </span>
-
-                <span class="color-wrapper">
-                    <input type="radio" name="player-color" id="player-color-amber" value="EC9516" />
-                    <span class="color-square amber"> </span>
-                </span>
-            </div>
+           
 
             <a href="#" class="submit-details button">Let's Race!</a>
         </div>
@@ -97,6 +45,7 @@
 
         <div class="ready-screen">
             <p>Welcome, <span class="player-name">Player</span></p>
+            <p class="car-identifier"><img src="../cars/car-.png" alt="" /> You are playing as the <span class="car-color"></span> car</p>
             <p>Players in this round: </p>
 
             <ul class="clearfix other-players">
@@ -162,8 +111,7 @@
         <script type="text/javascript">
 
             var socket,
-                playerConfig = {},
-                selectedColor = '';
+                playerConfig = {};
 
             var sendPositions = function (coordinates) {
                 // check coordinates
@@ -194,6 +142,13 @@
 
                 $('.player-name').html(playerConfig.playerName);
 
+                for (var i=0; i < joinedPlayers.length; i++) {
+                    if (joinedPlayers[i].playerName === playerConfig.playerName) {
+                        $('.car-identifier').find('img').attr('src', '../cars/car-' + joinedPlayers[i].playerColor + '.png');
+                        $('.car-identifier').find('.car-color').addClass(joinedPlayers[i].playerColor).html(joinedPlayers[i].playerColor);
+                    }
+                }
+
                 // show who has joined so far
                 updateJoinedPlayers(joinedPlayers);
             };
@@ -208,11 +163,9 @@
                 for (var i=0; i < joinedPlayers.length; i++) {
                     $playersList.append(
                         '<li class="' + joinedPlayers[i].playerColor
-                            + '" style="background-color: #'
-                            + joinedPlayers[i].playerColor + '"><span class="name">'
-                            + joinedPlayers[i].playerName
-                            + '</span><span class="color" data-hex="'
-                            + joinedPlayers[i].playerColor + '</span></li>'
+                            + '"><img src="../cars/car-' + joinedPlayers[i].playerColor + '.png" />'
+                            + '<span class="name">' + joinedPlayers[i].playerName
+                            + '</span></li>'
                     );
                 }
             };
@@ -223,7 +176,7 @@
                 
                 playerConfig = {
                     playerName: $('#player-name').val(),
-                    playerColor: selectedColor
+                    playerColor: '' // need to choose for them
                 };
 
                 socket.emit('initialisePlayer', playerConfig);
@@ -270,7 +223,7 @@
 
             var addUserToGame = function () {
     
-                socket = io.connect('http://d405734.ngrok.com');
+                socket = io.connect('http://45b0e8f6.ngrok.com');
 
                 if (socket) {
                     console.log('user added to game with socket: ' + socket);
@@ -299,9 +252,11 @@
                 $('.join-game').on('click', addUserToGame);
                 $('.submit-details').on('click', sendUserConfig);
 
+               /*
                 $('.row').find('input[type=radio]').on('change', function() {
                     selectedColor = $(this).val();
                 });
+*/
             };
 
 
