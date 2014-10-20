@@ -101,19 +101,33 @@ body {
 
 .enter-details #player-name {
     display: block;
-    width: 80%;
     margin: auto;
+    background-color: #000;
+    color: #FFF;
+    border: 0;
     padding: 14px;
-    font-size: 20px;
+    font-size: 36px;
+    text-align: left;
+    width: 146px;
+    text-transform: uppercase;
+    letter-spacing: 8px;
 }
 
+.enter-details label {
+    display: block;
+    text-align: center;
+    margin-left: -2px;
+    font-family: 'Orbitron', sans-serif;
+
+}
 .enter-details .choose-color {
     display: block;
     margin: 14px 24px 6px;
 }
 
 .player-name {
-    text-transform: capitalize;
+    text-transform: uppercase;
+
 }
 
 .row {
@@ -207,12 +221,15 @@ body {
 
 .error-message {
     color:#e8090a;
-    display: block;
     font-family: 'Orbitron', sans-serif;
     text-align: center;
     padding:0 10%;
     font-size:18px;
     display:none;
+}
+
+.ready-screen {
+    font-family: 'Orbitron', sans-serif;
 }
 
 .ready-screen p {
@@ -235,10 +252,10 @@ body {
     text-align: center;
 }
 
-
 li .name {
     padding-top: 22px;
-    float: right
+    float: right;
+    text-transform: uppercase;
 }
 
 .ffffff {
@@ -262,7 +279,6 @@ li .name {
 
 .car-identifier .car-color {
     font-weight:600;
-
 }
 
 .car-color.orange {
