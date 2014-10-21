@@ -379,8 +379,25 @@ function setActiveController(){
 }
 
 
-function controllerInit(){
 
+function setColors(hex){
+
+	$('.box').css('background-color', hex);
+	$('#speed').css('border-right-color', hex);
+	$('.middleMarker').css('border-top-color', hex);
+	$('.centerMarker').css('border-left-color', hex);
+
+	$('#controllerL .output').css({
+		'border-right-color':hex,
+		'border-bottom-color':hex,
+		'border-left-color':hex
+	})
+
+}
+
+
+function controllerInit(){
+    setColors('#e77d20');
     setActiveController();
     setEventListeners();
 
