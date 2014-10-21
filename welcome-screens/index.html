@@ -108,7 +108,18 @@
         <script type="text/javascript">
 
             var socket,
-                playerConfig = {};
+                playerConfig = {},
+                colorLookup = {
+                    blue: '#3297da',
+                    green: '#2bcd70',
+                    grey: '#7c8a8e',
+                    olive: '#119077',
+                    orange: '#e77d20',
+                    purple: '#9956b4',
+                    red: '#e84a3a',
+                    white: '#bdc2c7',
+                    yellow: '#f3c60c'
+                };
 
             var sendPositions = function (coordinates) {
                 // check coordinates
@@ -141,6 +152,9 @@
 
                 for (var i=0; i < joinedPlayers.length; i++) {
                     if (joinedPlayers[i].playerName === playerConfig.playerName) {
+
+                        playerConfig.playerColor = joinedPlayers[i].playerColor;
+
                         $('.car-identifier').find('img').attr('src', '../cars/car-' + joinedPlayers[i].playerColor + '.png');
                         $('.car-identifier').find('.car-color').addClass(joinedPlayers[i].playerColor).html(joinedPlayers[i].playerColor);
                     }
@@ -205,6 +219,7 @@
 
                     console.log('script has loaded');
                     controllerInit();
+                    setColors(colorLookup[playerConfig.playerColor]);
 
                 });
                             

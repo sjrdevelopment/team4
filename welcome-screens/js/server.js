@@ -2,6 +2,8 @@ var io = require('socket.io').listen(8083);
 var socketArray = [];
 var players = [];
 var carColors = ['blue', 'green', 'grey', 'olive', 'orange', 'purple', 'red', 'white', 'yellow'];
+var gameGridActive = false;
+var gameGridSocket = {};
 
 var serveBouncerPage = function (socket) {
     socket.emit('serveBouncerPage');
@@ -12,12 +14,21 @@ io.sockets.on('connection', function (socket) {
 
     console.log('connection made');
 
-    
-    if (players.length < 6) {
-        socketArray.push(socket.id);
+    if (!gameGridActive) {
+        // this is the game grid
+        
+        gameGridActive = true;
+        gameGridSocket = socket;
+
     } else {
-        // already have 6 people joined, return bouncer page
-        serveBouncerPage(socket);
+        // this is a player
+
+        if (players.length < 6) {
+            socketArray.push(socket.id);
+        } else {
+            // already have 6 people joined, return bouncer page
+            serveBouncerPage(socket);
+        }
     }
 
     socket.on('initialisePlayer', function (playerConfig) {
@@ -56,11 +67,25 @@ io.sockets.on('connection', function (socket) {
     socket.on('turning', function (turningValue) {
         // do something with the turned value (-1 to 1)
         console.log(socket.id + ' is turning by ' + turningValue);
+
+        var carEvent = {
+            socketID: socket.id,
+            movementValue: turningValue
+        };
+
+        gameGridSocket.emit('ggTurning', carEvent);
     });
 
     socket.on('acceleration', function (accelerationValue) {
         // do something with the acceleration value (-1 to 0 for braking/reverse, 0-1 for forward acceleration)
         console.log(socket.id + ' is accerating by ' + accelerationValue);
+
+        var carEvent = {
+            socketID: socket.id,
+            movementValue: accelerationValue
+        };
+
+        gameGridSocket.emit('ggAcceleration', carEvent);
     });
 
 });

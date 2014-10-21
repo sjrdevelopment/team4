@@ -1,13 +1,49 @@
 <html>
 <head>
 	<title>Car Fluid</title>
-	<script type="text/javascript" src="bower_components/crafty/dist/crafty-min.js"></script>
-	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="http://30abdf69.ngrok.com/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="js/crafty-min.js"></script>
+	<script type="text/javascript" src="../welcome-screens/js/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="js/script.js"></script>
+
 
 	<style>
 		body, html { margin:0; padding: 0; overflow:hidden; font-family:Arial; font-size:20px }
 	</style>
 </head>
-<body></body>
+<body>
+
+<script type="text/javascript">
+
+    var socket,
+        playerConfig = {};
+
+
+    var initGameGridOnServer = function () {
+
+        socket = io.connect('http://30abdf69.ngrok.com');
+
+        if (socket) {
+            console.log('user added to game with socket: ' + socket);
+
+
+            socket.on('ggTurning', function (carEvent) {
+                console.log('Car ID ' + carEvent.socketID + ' is turning by ' + carEvent.movementValue);
+            });
+
+            socket.on('ggAcceleration', function (carEvent) {
+                console.log('Car ID ' + carEvent.socketID + ' is accelerating by ' + carEvent.movementValue);
+            });
+
+          
+        }
+
+    };
+
+
+   initGameGridOnServer();
+
+</script>
+
+</body>
 </html>
