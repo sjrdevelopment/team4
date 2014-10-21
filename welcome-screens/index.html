@@ -3,27 +3,24 @@
     <head>
         <link href="css/default.css" type="text/css" rel="stylesheet" />
         <link href="css/controller.css" type="text/css" rel="stylesheet" />
- <!--         <script src="js/controller.js" type="text/js"></script> -->
 
-        <script src="http://230f5269.ngrok.com/socket.io/socket.io.js"></script>
+        <script src="http://30abdf69.ngrok.com/socket.io/socket.io.js"></script>
         <script src="js/jquery-2.1.1.min.js"></script>
         <script src="js/lodash.min.js"></script>
-        <!-- <script src="js/controller-functions.js" type="text/javascript"></script> -->
         
         <link href='http://fonts.googleapis.com/css?family=Orbitron:400,700' rel='stylesheet' type='text/css'>
 
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Team 4 Micro Machines</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-        
+        <title>Team 4 Micro Machines</title>
     </head>
 
     <body>
         <div class="welcome-header">
-            <!-- <img src="img/team4.png" alt="A Team4 Production" />
+            <img src="img/team4.png" alt="A Team4 Production" />
             <h1>Micro Machines</h1>
-            <p>A Team4 Production</p> -->
+            <p>A Team4 Production</p> 
         </div>
         
         <div class="landing-page">    
@@ -223,7 +220,7 @@
 
             var addUserToGame = function () {
     
-                socket = io.connect('http://230f5269.ngrok.com');
+                socket = io.connect('http://30abdf69.ngrok.com');
 
                 if (socket) {
                     console.log('user added to game with socket: ' + socket);

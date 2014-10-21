@@ -252,6 +252,11 @@ body {
     text-align: center;
 }
 
+.ready-screen h2 {
+    display:block;
+    text-align:center;
+}
+
 li .name {
     padding-top: 22px;
     float: right;
