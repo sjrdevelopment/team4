@@ -4,7 +4,7 @@
         <link href="css/default.css" type="text/css" rel="stylesheet" />
         <link href="css/controller.css" type="text/css" rel="stylesheet" />
 
-        <script src="http://30abdf69.ngrok.com/socket.io/socket.io.js"></script>
+        <script src="http://localhost:8083/socket.io/socket.io.js"></script>
         <script src="js/jquery-2.1.1.min.js"></script>
         <script src="js/lodash.min.js"></script>
         
@@ -235,7 +235,7 @@
 
             var addUserToGame = function () {
     
-                socket = io.connect('http://30abdf69.ngrok.com');
+                socket = io.connect('http://localhost:8083');
 
                 if (socket) {
                     console.log('user added to game with socket: ' + socket);

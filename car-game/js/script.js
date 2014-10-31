@@ -18,67 +18,55 @@ $(document).ready(function() {
 	
 	Crafty.scene("main", function() {
 		Crafty.background("url('images/bg.png')");
-		
-		//score display
-		var score = Crafty.e("2D, DOM, Text")
-			.text("Score: 0")
-			.attr({x: Crafty.viewport.width - 300, y: Crafty.viewport.height - 50, w: 200, h:50})
-			.css({color: "#fff"});
 
 		var player = [];
-			
-		//player entity
-		for(i = 0; i < 5; i++){
-			var x = 40+60*(i%3),
-				y = i < 3 ? 320 : i < 6 ? 420 : 520;
 
-				player[i] = Crafty.e("2D, Canvas, car, Controls, Collision")
-				.attr({move: {left: false, right: false, up: false, down: false}, xspeed: 0, yspeed: 0, decay: 0.0,
+		socket = io.connect('http://localhost:8083');
+
+		socket.on('connect',function(){
+			addPlayer(this.socket.sessionid);
+			console.info(this.socket.sessionid);
+			console.log('user added to game with socket: ', socket);
+
+			socket.on('ggTurning', function (carEvent) {
+				console.log('Car ID ' + carEvent.socketID + ' is turning by ' + carEvent.movementValue);
+				accelerating(carEvent.socketID,carEvent.movementValue);
+			});
+
+			socket.on('ggAcceleration', function (carEvent) {
+				console.log('Car ID ' + carEvent.socketID + ' is accelerating by ' + carEvent.movementValue);
+				accelerating(carEvent.socketID,carEvent.movementValue);
+			});
+
+			/////////////////////////////
+			////For Testing Purpose Start //
+			/////////////////////////////
+			///
+			
+			accelerating(socket.socket.sessionid, 1);
+			// turning(socket.socket.sessionid, 1);
+			//turning(socket.socket.sessionid, -1);
+			setTimeout(function(){
+				accelerating(socket.socket.sessionid, -1);
+				//turning(socket.socket.sessionid, 0);
+			},1000);
+
+
+			/////////////////////////////
+			////For Testing Purpose End //
+			/////////////////////////////
+			///
+		});
+
+		function addPlayer(sessionId){
+			var x = 40+60*( player.length %3),
+			y = player.length < 3 ? 320 : player.length < 6 ? 420 : 520;
+
+			player[sessionId] = Crafty.e("2D, Canvas, car, Controls, Collision")
+				.attr({move: {left: false, right: false, up: false, down: false}, xspeed: 0, yspeed: 0, decay: 0.5,
 					x: x, y: y, score: 0})
 				.origin("center")
-				.bind("KeyDown", function(e) {
-					//on keydown, set the move booleans
-					if(e.keyCode === Crafty.keys.RIGHT_ARROW) {
-						this.move.right = true;
-					} else if(e.keyCode === Crafty.keys.LEFT_ARROW) {
-						this.move.left = true;
-					} else if(e.keyCode === Crafty.keys.UP_ARROW) {
-						this.move.up = true;
-					} else if (e.keyCode === Crafty.keys.SPACE) {
-						//console.log("Blast");
-						//Crafty.audio.play("Blaster");
-						//create a bullet entity
-						Crafty.e("2D, DOM, Color, bullet")
-							.attr({
-								x: this._x+32,
-								y: this._y+32,
-								w: 2, 
-								h: 5, 
-								rotation: this._rotation, 
-								xspeed: 20 * Math.sin(this._rotation / 57.3), 
-								yspeed: 20 * Math.cos(this._rotation / 57.3)
-							})
-							.color("rgb(255, 0, 0)")
-							.bind("EnterFrame", function() {
-								this.x += this.xspeed;
-								this.y -= this.yspeed;
-								
-								//destroy if it goes out of bounds
-								if(this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
-									this.destroy();
-								}
-							});
-					}
-				}).bind("KeyUp", function(e) {
-					//on key up, set the move booleans to false
-					if(e.keyCode === Crafty.keys.RIGHT_ARROW) {
-						this.move.right = false;
-					} else if(e.keyCode === Crafty.keys.LEFT_ARROW) {
-						this.move.left = false;
-					} else if(e.keyCode === Crafty.keys.UP_ARROW) {
-						this.move.up = false;
-					}
-				}).bind("EnterFrame", function() {
+				.bind("EnterFrame", function() {
 					if(this.move.right) this.rotation += 5;
 					if(this.move.left) this.rotation -= 5;
 					
@@ -116,24 +104,93 @@ $(document).ready(function() {
 					if(this._y < 15) {
 						this.y = 15;
 					}
-			}).collision()
-			.onHit("collision1", function() {
-				console.info('collision 1');
-				// this.x = this._prevX;
-				// this.y = this._prevY;
-				this.xspeed = 0;
-				this.yspeed = 0;
-				
-			}).onHit("collision2", function() {
-				console.info('collision 2');
-				this.xspeed = 0;
-				this.yspeed = 0;
-			}).onHit("collision3", function() {
-				console.info('collision 3');
-				this.xspeed = 0;
-				this.yspeed = 0;
-			});
+				}).collision()
+				.onHit("collision1", function() {
+					console.info('collision 1');
+					// this.x = this._prevX;
+					// this.y = this._prevY;
+					this.xspeed = 0;
+					this.yspeed = 0;
+					
+				}).onHit("collision2", function() {
+					console.info('collision 2');
+					this.xspeed = 0;
+					this.yspeed = 0;
+				}).onHit("collision3", function() {
+					console.info('collision 3');
+					this.xspeed = 0;
+					this.yspeed = 0;
+				});
 		}
+
+		function turning(sessionId,val){
+			player[sessionId].move.right = false;
+				player[sessionId].move.left = false;
+			if(val > 0){ //right
+				player[sessionId].move.right = true;
+			}else if(val < 0){//left 
+				player[sessionId].move.left = true;
+			}
+		}
+
+		function accelerating(sessionId,val){
+			if(val > 0)
+				player[sessionId].move.up = true;
+			else
+				player[sessionId].move.up = false;
+		}
+
+		/*
+		.bind("KeyDown", function(e) {
+			//on keydown, set the move booleans
+			if(e.keyCode === Crafty.keys.RIGHT_ARROW) {
+				this.move.right = true;
+			} else if(e.keyCode === Crafty.keys.LEFT_ARROW) {
+				this.move.left = true;
+			} else if(e.keyCode === Crafty.keys.UP_ARROW) {
+				this.move.up = true;
+			} 
+		}).bind("KeyUp", function(e) {
+			//on key up, set the move booleans to false
+			if(e.keyCode === Crafty.keys.RIGHT_ARROW) {
+				this.move.right = false;
+			} else if(e.keyCode === Crafty.keys.LEFT_ARROW) {
+				this.move.left = false;
+			} else if(e.keyCode === Crafty.keys.UP_ARROW) {
+				this.move.up = false;
+			}
+		})
+		 */
+		
+		/*
+		//Bullet
+		if (e.keyCode === Crafty.keys.SPACE) {
+						//console.log("Blast");
+						//Crafty.audio.play("Blaster");
+						//create a bullet entity
+						Crafty.e("2D, DOM, Color, bullet")
+							.attr({
+								x: this._x+32,
+								y: this._y+32,
+								w: 2,
+								h: 5,
+								rotation: this._rotation,
+								xspeed: 20 * Math.sin(this._rotation / 57.3),
+								yspeed: 20 * Math.cos(this._rotation / 57.3)
+							})
+							.color("rgb(255, 0, 0)")
+							.bind("EnterFrame", function() {
+								this.x += this.xspeed;
+								this.y -= this.yspeed;
+								
+								//destroy if it goes out of bounds
+								if(this._x > Crafty.viewport.width || this._x < 0 || this._y > Crafty.viewport.height || this._y < 0) {
+									this.destroy();
+								}
+							});
+					}
+		 */
+		
 
 		//Collision Entity
 		Crafty.e('collision1, 2D, Canvas')
