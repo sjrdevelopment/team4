@@ -4,7 +4,7 @@ var players = [];
 var carColors = ['blue', 'green', 'grey', 'olive', 'orange', 'purple', 'red', 'white', 'yellow'];
 var gameGridActive = false;
 var gameGridSocket = {};
-var maxPlayer = 2;
+var maxPlayer = 6;
 
 var serveBouncerPage = function (socket) {
     socket.emit('serveBouncerPage');

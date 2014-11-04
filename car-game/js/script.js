@@ -4,10 +4,53 @@ $(document).ready(function() {
 	Crafty.canvas.init();
 	
 	//preload the needed assets
-	Crafty.load(["images/car_64.png", "images/bg.png"], function() {
+	////['blue', 'green', 'grey', 'olive', 'orange', 'purple', 'red', 'white', 'yellow']
+	
+	Crafty.load(["images/all_cars/car-yellow.png",
+				"images/all_cars/car-white.png",
+				"images/all_cars/car-blue.png",
+				"images/all_cars/car-green.png",
+				"images/all_cars/car-grey.png",
+				"images/all_cars/car-olive.png",
+				"images/all_cars/car-orange.png",
+				"images/all_cars/car-purple.png",
+				"images/all_cars/car-red.png",
+				"images/bg.png"], function() {
 		//splice the spritemap
-		Crafty.sprite(64, "images/car_64.png", {
-			car: [0,0]
+		Crafty.sprite(64, "images/all_cars/car-yellow.png", {
+			yellow: [0,0]
+		});
+
+		Crafty.sprite(64, "images/all_cars/car-white.png", {
+			white: [0,0]
+		});
+
+		Crafty.sprite(64, "images/all_cars/car-blue.png", {
+			blue: [0,0]
+		});
+
+		Crafty.sprite(64, "images/all_cars/car-green.png", {
+			green: [0,0]
+		});
+
+		Crafty.sprite(64, "images/all_cars/car-grey.png", {
+			grey: [0,0]
+		});
+
+		Crafty.sprite(64, "images/all_cars/car-olive.png", {
+			olive: [0,0]
+		});
+
+		Crafty.sprite(64, "images/all_cars/car-orange.png", {
+			orange: [0,0]
+		});
+
+		Crafty.sprite(64, "images/all_cars/car-purple.png", {
+			purple: [0,0]
+		});
+
+		Crafty.sprite(64, "images/all_cars/car-red.png", {
+			red: [0,0]
 		});
 
 		//Crafty.audio.add("Blaster", ["space-blaster.wav", "space-blaster.mp3"])
@@ -31,7 +74,7 @@ $(document).ready(function() {
 				var i;
 				for(i = 0; i < allPlayers.length; i++){
 					console.info(allPlayers[i].playerId);
-					addPlayer(i,allPlayers[i].playerId);
+					addPlayer(i,allPlayers[i].playerId,allPlayers[i].playerColor);
 				}
 				//accelerating(carEvent.socketID,carEvent.movementValue);
 			});
@@ -51,11 +94,11 @@ $(document).ready(function() {
 			});
 		});
 
-		function addPlayer(indx,sessionId){
+		function addPlayer(indx,sessionId,color){
 			var x = 40+60*( indx %3),
-			y = player.length < 3 ? 320 : indx < 6 ? 420 : 520;
+			y = indx < 3 ? 320 : indx < 6 ? 420 : 520;
 			
-			player[sessionId] = Crafty.e("2D, Canvas, car, Controls, Collision")
+			player[sessionId] = Crafty.e("2D, Canvas, "+color+", Controls, Collision")
 				.attr({move: {left: false, right: false, up: false, down: false}, xspeed: 0, yspeed: 0, decay: 0.5,
 					x: x, y: y, score: 0})
 				.origin("center")
