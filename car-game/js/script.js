@@ -21,41 +21,34 @@ $(document).ready(function() {
 
 		var player = [];
 
-		socket = io.connect('http://localhost:8083');
+		socket = io.connect('http://10.192.62.240:8083');
 
 		socket.on('connect',function(){
-			addPlayer(this.socket.sessionid);
+			console.info('connected successfully - waiting for player to join');
+
+			socket.on('beginGame', function (allPlayers) {
+				console.log("game begin with - ",allPlayers);
+				var i;
+				for(i = 0; i < allPlayers.length; i++){
+					console.info(allPlayers[i].playerId);
+					addPlayer(allPlayers[i].playerId);
+				}
+				//accelerating(carEvent.socketID,carEvent.movementValue);
+			});
+
+			/*addPlayer(this.socket.sessionid);
 			console.info(this.socket.sessionid);
 			console.log('user added to game with socket: ', socket);
-
+			*/
 			socket.on('ggTurning', function (carEvent) {
-				console.log('Car ID ' + carEvent.socketID + ' is turning by ' + carEvent.movementValue);
-				accelerating(carEvent.socketID,carEvent.movementValue);
+				//console.log('Car ID ' + carEvent.socketID + ' is turning by ' + carEvent.movementValue);
+				turning(carEvent.socketID,carEvent.movementValue);
 			});
 
 			socket.on('ggAcceleration', function (carEvent) {
-				console.log('Car ID ' + carEvent.socketID + ' is accelerating by ' + carEvent.movementValue);
+				//console.log('Car ID ' + carEvent.socketID + ' is accelerating by ' + carEvent.movementValue);
 				accelerating(carEvent.socketID,carEvent.movementValue);
 			});
-
-			/////////////////////////////
-			////For Testing Purpose Start //
-			/////////////////////////////
-			///
-			
-			accelerating(socket.socket.sessionid, 1);
-			// turning(socket.socket.sessionid, 1);
-			//turning(socket.socket.sessionid, -1);
-			setTimeout(function(){
-				accelerating(socket.socket.sessionid, -1);
-				//turning(socket.socket.sessionid, 0);
-			},1000);
-
-
-			/////////////////////////////
-			////For Testing Purpose End //
-			/////////////////////////////
-			///
 		});
 
 		function addPlayer(sessionId){
@@ -67,12 +60,12 @@ $(document).ready(function() {
 					x: x, y: y, score: 0})
 				.origin("center")
 				.bind("EnterFrame", function() {
-					if(this.move.right) this.rotation += 5;
-					if(this.move.left) this.rotation -= 5;
+					//if(this.move.right) this.rotation += 5;
+					//if(this.move.left) this.rotation -= 5;
 					
 					//acceleration and movement vector
-					var vx = Math.sin(this._rotation * Math.PI / 180) * 0.1,
-						vy = Math.cos(this._rotation * Math.PI / 180) * 0.1;
+					var vx = Math.sin(this.rotation * Math.PI / 180) * 0.1,
+						vy = Math.cos(this.rotation * Math.PI / 180) * 0.1;
 					
 					//if the move up is true, increment the y/xspeeds
 					if(this.move.up) {
@@ -128,16 +121,23 @@ $(document).ready(function() {
 				player[sessionId].move.left = false;
 			if(val > 0){ //right
 				player[sessionId].move.right = true;
+				player[sessionId].rotation += val*5;
 			}else if(val < 0){//left 
 				player[sessionId].move.left = true;
+				player[sessionId].rotation += val*5;
 			}
 		}
 
 		function accelerating(sessionId,val){
-			if(val > 0)
+			// player[sessionId].move.up
+			if(val > 0){
 				player[sessionId].move.up = true;
-			else
+				//player[sessionId].yspeed = -val*5;
+			}
+			else{
 				player[sessionId].move.up = false;
+				//player[sessionId].yspeed = -val*2;
+			}
 		}
 
 		/*

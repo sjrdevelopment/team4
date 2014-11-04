@@ -4,7 +4,7 @@
         <link href="css/default.css" type="text/css" rel="stylesheet" />
         <link href="css/controller.css" type="text/css" rel="stylesheet" />
 
-        <script src="http://localhost:8083/socket.io/socket.io.js"></script>
+        <script src="http://10.192.62.240:8083/socket.io/socket.io.js"></script>
         <script src="js/jquery-2.1.1.min.js"></script>
         <script src="js/lodash.min.js"></script>
         
@@ -51,10 +51,6 @@
             <h2>Rotate your phone to landscape now</h2>
             <p>The game will begin shortly</p>
         </div>
-
-
-
-
 
         <div class="controller-screen">
 
@@ -187,7 +183,8 @@
                 
                 playerConfig = {
                     playerName: $('#player-name').val(),
-                    playerColor: '' // need to choose for them
+                    playerColor: '', // need to choose for them
+                    playerId: socket.socket.sessionid
                 };
 
                 socket.emit('initialisePlayer', playerConfig);
@@ -235,7 +232,7 @@
 
             var addUserToGame = function () {
     
-                socket = io.connect('http://localhost:8083');
+                socket = io.connect('http://10.192.62.240:8083');
 
                 if (socket) {
                     console.log('user added to game with socket: ' + socket);

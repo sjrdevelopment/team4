@@ -4,6 +4,7 @@ var players = [];
 var carColors = ['blue', 'green', 'grey', 'olive', 'orange', 'purple', 'red', 'white', 'yellow'];
 var gameGridActive = false;
 var gameGridSocket = {};
+var maxPlayer = 2;
 
 var serveBouncerPage = function (socket) {
     socket.emit('serveBouncerPage');
@@ -39,21 +40,21 @@ io.sockets.on('connection', function (socket) {
             return false;
         }
 
-        if (players.length < 5) {
+        if (players.length < (maxPlayer-1)) {
             playerConfig.playerColor = carColors.pop();
             console.log('setting up user...');
             players.push(playerConfig);
             socket.emit('userReady', players);
             socket.broadcast.emit('sendUpdatedPlayers', players);
 
-        } else if (players.length === 5) {
+        } else if (players.length === (maxPlayer-1)) {
             playerConfig.playerColor = carColors.pop();
             players.push(playerConfig);
             socket.emit('userReady', players);
             socket.broadcast.emit('sendUpdatedPlayers', players);
 
             // this is the  6th player, game will begin now
-            io.sockets.emit('beginGame');
+            io.sockets.emit('beginGame',players);
 
         } else {
 
@@ -73,7 +74,8 @@ io.sockets.on('connection', function (socket) {
             movementValue: turningValue
         };
 
-        gameGridSocket.emit('ggTurning', carEvent);
+        io.sockets.emit('ggTurning', carEvent);
+        // gameGridSocket.emit('ggTurning', carEvent);
     });
 
     socket.on('acceleration', function (accelerationValue) {
@@ -85,7 +87,8 @@ io.sockets.on('connection', function (socket) {
             movementValue: accelerationValue
         };
 
-        gameGridSocket.emit('ggAcceleration', carEvent);
+        io.sockets.emit('ggAcceleration', carEvent);
+        // gameGridSocket.emit('ggAcceleration', carEvent);
     });
 
 });
