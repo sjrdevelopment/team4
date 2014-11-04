@@ -31,7 +31,7 @@ $(document).ready(function() {
 				var i;
 				for(i = 0; i < allPlayers.length; i++){
 					console.info(allPlayers[i].playerId);
-					addPlayer(allPlayers[i].playerId);
+					addPlayer(i,allPlayers[i].playerId);
 				}
 				//accelerating(carEvent.socketID,carEvent.movementValue);
 			});
@@ -51,10 +51,10 @@ $(document).ready(function() {
 			});
 		});
 
-		function addPlayer(sessionId){
-			var x = 40+60*( player.length %3),
-			y = player.length < 3 ? 320 : player.length < 6 ? 420 : 520;
-
+		function addPlayer(indx,sessionId){
+			var x = 40+60*( indx %3),
+			y = player.length < 3 ? 320 : indx < 6 ? 420 : 520;
+			
 			player[sessionId] = Crafty.e("2D, Canvas, car, Controls, Collision")
 				.attr({move: {left: false, right: false, up: false, down: false}, xspeed: 0, yspeed: 0, decay: 0.5,
 					x: x, y: y, score: 0})
